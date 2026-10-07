@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: library-postgres
+    environment:
+      POSTGRES_DB: library
+      POSTGRES_USER: library
+      POSTGRES_PASSWORD: library
+    ports:
+      - "5432:5432"
+    volumes:
+      # Data survives container restarts. Reset with: docker compose down -v
+      - library-data:/var/lib/postgresql/data
+      # Scripts in this folder run ONLY when the data volume is empty (first start)
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U library -d library"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  library-data:
