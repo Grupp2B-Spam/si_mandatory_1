@@ -1,6 +1,7 @@
 package graphQL.api;
 
 import graphQL.dto.AuthorDto;
+import graphQL.input.AuthorInput;
 import graphQL.service.AuthorService;
 import org.eclipse.microprofile.graphql.GraphQLApi;
 import org.eclipse.microprofile.graphql.Mutation;
@@ -19,18 +20,18 @@ public class AuthorController {
     }
 
     @Query("authors")
-    public List<AuthorDto> getAuthors() {
+    public @NonNull List<@NonNull AuthorDto> getAuthors() {
         return authorService.listAll();
     }
 
     @Mutation("createAuthor")
-    public AuthorDto createAuthor(@NonNull String name, String surname) {
-        return authorService.create(name, surname);
+    public AuthorDto createAuthor(@NonNull AuthorInput input) {
+        return authorService.create(input.name(), input.surname());
     }
 
     @Mutation("updateAuthor")
-    public AuthorDto updateAuthor(@NonNull Integer id, @NonNull String name, String surname) {
-        return authorService.update(id, name, surname);
+    public AuthorDto updateAuthor(@NonNull Integer id,@NonNull AuthorInput input) {
+        return authorService.update(id, input.name(), input.surname());
     }
 
     @Mutation("deleteAuthor")

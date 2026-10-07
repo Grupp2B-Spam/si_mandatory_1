@@ -8,5 +8,8 @@
 library.db
 *.pdf
 
+# Personal notes
+NOTER.md
+
 # Old build output from before the move
 /target/
