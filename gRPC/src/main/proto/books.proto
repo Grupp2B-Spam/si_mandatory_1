@@ -1,0 +1,27 @@
+syntax = "proto3";
+package books;
+option java_package = "assignment.books.proto";
+option java_multiple_files = true;
+
+service BookService {
+  rpc GetBookById(GetBookByIdRequest) returns (Book);
+  rpc CreateBook(CreateBookRequest) returns (CreateBookResponse);
+  rpc WatchBooks(WatchBooksRequest) returns (stream Book);
+}
+
+message Book {
+  string id = 1;
+  string name = 2;
+  string author_id = 3;
+  string publisher_id = 4;
+  int32 publication_year = 5;
+}
+message GetBookByIdRequest { string id = 1; }
+message CreateBookRequest {
+  string name = 1;
+  string author_id = 2;
+  string publisher_id = 3;
+  int32 publication_year = 4;
+}
+message CreateBookResponse { Book book = 1; }
+message WatchBooksRequest {}
