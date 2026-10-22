@@ -23,6 +23,11 @@ public class BookPageHateoas extends HateoasModel {
         return page;
     }
 
+    @Override
+    public List<BookHateoas> nestedModels() {
+        return books;
+    }
+
     public record PageInfo(int number, int size, long totalItems, long totalPages) {
     }
 }

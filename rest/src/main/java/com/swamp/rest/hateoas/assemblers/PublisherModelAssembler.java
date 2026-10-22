@@ -22,46 +22,46 @@ public class PublisherModelAssembler {
         this.pathBuilder = pathBuilder;
     }
 
-    public PublisherHateoas toModel(Publisher publisher, ApiRole role, String apiVersion) {
-        return toModel(publisher, role, apiVersion, true);
+    public PublisherHateoas toModel(Publisher publisher, ApiRole role) {
+        return toModel(publisher, role, true);
     }
 
-    private PublisherHateoas toModel(Publisher publisher, ApiRole role, String apiVersion, boolean includePathContext) {
+    private PublisherHateoas toModel(Publisher publisher, ApiRole role, boolean includePathContext) {
         PublisherHateoas publisherHateoas = new PublisherHateoas(
                 publisher.id(),
                 publisher.name());
 
         if (includePathContext) {
-            publisherHateoas.add(pathBuilder.resourcePath("publishers", publisher.id(), "publisher-resource", apiVersion));
+            publisherHateoas.add(pathBuilder.resourcePath("publishers", publisher.id(), "publisher-resource"));
         }
 
         publisherHateoas.add(pathBuilder.withApiMetadata(linkTo(methodOn(PublisherController.class)
-                .findById(publisher.id(), null, null, null)).withSelfRel(), apiVersion));
+                .findById(publisher.id(), null, null)).withSelfRel()));
 
         if (role.canWrite()) {
             publisherHateoas.add(pathBuilder.withApiMetadata(linkTo(methodOn(PublisherController.class)
-                    .update(publisher.id(), null, null, null, null)).withRel("update"), apiVersion));
+                    .update(publisher.id(), null, null, null)).withRel("update")));
             publisherHateoas.add(pathBuilder.withApiMetadata(linkTo(methodOn(PublisherController.class)
-                    .delete(publisher.id(), null, null, null)).withRel("delete"), apiVersion));
+                    .delete(publisher.id(), null, null)).withRel("delete")));
         }
 
         return publisherHateoas;
     }
 
-    public CollectionHateoas<PublisherHateoas> toCollectionModel(List<Publisher> publishers, ApiRole role, String apiVersion) {
+    public CollectionHateoas<PublisherHateoas> toCollectionModel(List<Publisher> publishers, ApiRole role) {
         List<PublisherHateoas> publisherModels = publishers.stream()
-                .map(publisher -> toModel(publisher, role, apiVersion, false))
+                .map(publisher -> toModel(publisher, role, false))
                 .toList();
 
         CollectionHateoas<PublisherHateoas> collectionModel = new CollectionHateoas<>("publishers", publisherModels);
         collectionModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(PublisherController.class)
-                .findAll(null, null, null)).withSelfRel(), apiVersion));
+                .findAll(null, null)).withSelfRel()));
 
-        collectionModel.add(pathBuilder.collectionPath("publishers", apiVersion));
+        collectionModel.add(pathBuilder.collectionPath("publishers"));
 
         if (role.canWrite()) {
             collectionModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(PublisherController.class)
-                    .create(null, null, null, null)).withRel("create"), apiVersion));
+                    .create(null, null, null)).withRel("create")));
         }
 
         return collectionModel;

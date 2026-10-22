@@ -33,11 +33,10 @@ public class PublisherController {
         this.publisherAssembler = publisherAssembler;
     }
 
-    @PostMapping
+    @PostMapping(version = "1")
     public ResponseEntity<PublisherHateoas> create(
             @RequestBody CreatePublisherRequest request,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         ApiRole role = ApiRole.fromHeader(roleHeader);
@@ -49,39 +48,36 @@ public class PublisherController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(publisherAssembler.toModel(createdPublisher, role, apiVersion));
+                .body(publisherAssembler.toModel(createdPublisher, role));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", version = "1")
     public ResponseEntity<PublisherHateoas> findById(
             @PathVariable Long id,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         ApiRole role = ApiRole.fromHeader(roleHeader);
 
         return publisherService.findById(id)
-                .map(publisher -> publisherAssembler.toModel(publisher, role, apiVersion))
+                .map(publisher -> publisherAssembler.toModel(publisher, role))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
+    @GetMapping(version = "1")
     public CollectionHateoas<PublisherHateoas> findAll(
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
-        return publisherAssembler.toCollectionModel(publisherService.findAll(), ApiRole.fromHeader(roleHeader), apiVersion);
+        return publisherAssembler.toCollectionModel(publisherService.findAll(), ApiRole.fromHeader(roleHeader));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", version = "1")
     public ResponseEntity<Void> update(
             @PathVariable Long id,
             @RequestBody Publisher publisher,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         if (!ApiRole.fromHeader(roleHeader).canWrite()) {
@@ -93,11 +89,10 @@ public class PublisherController {
                 : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", version = "1")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         if (!ApiRole.fromHeader(roleHeader).canWrite()) {

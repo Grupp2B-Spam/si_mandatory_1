@@ -1,6 +1,8 @@
 package com.swamp.rest.hateoas.assemblers;
 
 import com.swamp.rest.controller.BookController;
+import com.swamp.rest.controller.AuthorController;
+import com.swamp.rest.controller.PublisherController;
 import com.swamp.rest.hateoas.builders.*;
 import com.swamp.rest.hateoas.models.*;
 import com.swamp.rest.model.records.Book;
@@ -21,11 +23,11 @@ public class BookModelAssembler {
         this.pathBuilder = pathBuilder;
     }
 
-    public BookHateoas toModel(Book book, ApiRole role, String apiVersion) {
-        return toModel(book, role, apiVersion, true);
+    public BookHateoas toModel(Book book, ApiRole role) {
+        return toModel(book, role, true);
     }
 
-    private BookHateoas toModel(Book book, ApiRole role, String apiVersion, boolean includePathContext) {
+    private BookHateoas toModel(Book book, ApiRole role, boolean includePathContext) {
         BookHateoas bookHateoas = new BookHateoas(
                 book.id(),
                 book.title(),
@@ -34,27 +36,27 @@ public class BookModelAssembler {
                 book.publishingCompanyId());
 
         if (includePathContext) {
-            bookHateoas.add(pathBuilder.bookResourcePath(book.id(), apiVersion));
-            bookHateoas.add(pathBuilder.authorResourcePath(book.authorId(), apiVersion));
-            bookHateoas.add(pathBuilder.publisherResourcePath(book.publishingCompanyId(), apiVersion));
+            bookHateoas.add(pathBuilder.bookResourcePath(book.id()));
+            bookHateoas.add(pathBuilder.authorResourcePath(book.authorId()));
+            bookHateoas.add(pathBuilder.publisherResourcePath(book.publishingCompanyId()));
         }
 
         bookHateoas.add(pathBuilder.withApiMetadata(linkTo(methodOn(BookController.class)
-                .findById(book.id(), null, null, null)).withSelfRel(), apiVersion));
+                .findById(book.id(), null, null)).withSelfRel()));
 
         if (role.canWrite()) {
             bookHateoas.add(pathBuilder.withApiMetadata(linkTo(methodOn(BookController.class)
-                    .update(book.id(), null, null, null, null)).withRel("update"), apiVersion));
+                    .update(book.id(), null, null, null)).withRel("update")));
             bookHateoas.add(pathBuilder.withApiMetadata(linkTo(methodOn(BookController.class)
-                    .delete(book.id(), null, null, null)).withRel("delete"), apiVersion));
+                    .delete(book.id(), null, null)).withRel("delete")));
         }
 
         return bookHateoas;
     }
 
-    public BookPageHateoas toPagedModel(List<Book> books, int page, int size, long totalItems, ApiRole role, String apiVersion) {
+    public BookPageHateoas toPagedModel(List<Book> books, int page, int size, long totalItems, ApiRole role) {
         List<BookHateoas> bookModels = books.stream()
-                .map(book -> toModel(book, role, apiVersion, false))
+                .map(book -> toModel(book, role, false))
                 .toList();
 
         long totalPages = (long) Math.ceil((double) totalItems / size);
@@ -63,29 +65,29 @@ public class BookModelAssembler {
 
         BookPageHateoas pagedModel = new BookPageHateoas(bookModels, pageInfo);
         pagedModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(BookController.class)
-                .findAll(page, size, null, null, null)).withSelfRel(), apiVersion));
+                .findAll(page, size, null, null)).withSelfRel()));
         pagedModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(BookController.class)
-                .findAll(1, size, null, null, null)).withRel("first"), apiVersion));
+                .findAll(1, size, null, null)).withRel("first")));
         pagedModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(BookController.class)
-                .findAll(lastPage, size, null, null, null)).withRel("last"), apiVersion));
+                .findAll(lastPage, size, null, null)).withRel("last")));
 
-        pagedModel.add(pathBuilder.bookCollectionPath(page, size, apiVersion));
+        pagedModel.add(pathBuilder.bookCollectionPath(page, size));
 
         if (role.canWrite()) {
             pagedModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(BookController.class)
-                    .create(null, null, null, null)).withRel("create"), apiVersion));
+                    .create(null, null, null)).withRel("create")));
         }
 
         if (page > 1) {
             pagedModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(BookController.class)
-                    .findAll(page - 1, size, null, null, null))
-                    .withRel("prev"), apiVersion));
+                .findAll(page - 1, size, null, null))
+                    .withRel("prev")));
         }
 
         if (page < totalPages) {
             pagedModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(BookController.class)
-                    .findAll(page + 1, size, null, null, null))
-                    .withRel("next"), apiVersion));
+                .findAll(page + 1, size, null, null))
+                    .withRel("next")));
         }
 
         return pagedModel;

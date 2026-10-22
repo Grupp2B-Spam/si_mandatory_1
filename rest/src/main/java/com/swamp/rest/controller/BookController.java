@@ -33,11 +33,10 @@ public class BookController {
         this.bookAssembler = bookAssembler;
     }
 
-    @PostMapping
+    @PostMapping(version = "1")
     public ResponseEntity<BookHateoas> create(
             @RequestBody CreateBookRequest request,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         ApiRole role = ApiRole.fromHeader(roleHeader);
@@ -49,30 +48,28 @@ public class BookController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(bookAssembler.toModel(createdBook, role, apiVersion));
+                .body(bookAssembler.toModel(createdBook, role));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", version = "1")
     public ResponseEntity<BookHateoas> findById(
             @PathVariable Long id,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         ApiRole role = ApiRole.fromHeader(roleHeader);
 
         return bookService.findById(id)
-                .map(book -> bookAssembler.toModel(book, role, apiVersion))
+                .map(book -> bookAssembler.toModel(book, role))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
+    @GetMapping(version = "1")
     public BookPageHateoas findAll(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         int safePage = Math.max(page, 1);
@@ -80,15 +77,29 @@ public class BookController {
         int offset = (safePage - 1) * safeSize;
 
         return bookAssembler.toPagedModel(bookService.findAll(safeSize, offset), safePage, safeSize,
-                bookService.count(), ApiRole.fromHeader(roleHeader), apiVersion);
+                bookService.count(), ApiRole.fromHeader(roleHeader));
     }
 
-    @PutMapping("/{id}")
+    @GetMapping(version = "2")
+    public BookPageHateoas findAllV2(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
+            @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
+    ) {
+        int safePage = Math.max(page, 1);
+        int safeSize = Math.max(size, 1);
+        int offset = (safePage - 1) * safeSize;
+
+        return bookAssembler.toPagedModel(bookService.findAll(safeSize, offset), safePage, safeSize,
+                bookService.count(), ApiRole.fromHeader(roleHeader));
+    }
+
+    @PutMapping(value = "/{id}", version = "1")
     public ResponseEntity<Void> update(
             @PathVariable Long id,
             @RequestBody Book book,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         if (!ApiRole.fromHeader(roleHeader).canWrite()) {
@@ -100,11 +111,25 @@ public class BookController {
                 : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", version = "1")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
+            @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
+    ) {
+        if (!ApiRole.fromHeader(roleHeader).canWrite()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return bookService.delete(id)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping(value = "/{id}", version = "3")
+    public ResponseEntity<Void> deleteV3(
+            @PathVariable Long id,
+            @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         if (!ApiRole.fromHeader(roleHeader).canWrite()) {

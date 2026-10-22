@@ -6,45 +6,50 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/** Builds endpoint links; version metadata is applied centrally before serialization. */
 @Component
 public class HateoasPathBuilder {
 
-    public HateoasLink withApiMetadata(Link link, String apiVersion) {
-        return new HateoasLink(link.getRel().value(), link.getHref(), Integer.parseInt(apiVersion));
+    public HateoasLink withApiMetadata(Link link) {
+        return new HateoasLink(link.getRel().value(), link.getHref(), List.of());
     }
 
-    public List<HateoasLink> collectionPath(String resourceName, String apiVersion) {
+    public List<HateoasLink> collectionPath(String resourceName) {
         return List.of(
-                withApiMetadata(Link.of("/api").withRel("api-root"), apiVersion),
-                withApiMetadata(Link.of("/api/" + resourceName).withRel(resourceName + "-collection"), apiVersion));
+                link("api-root", "/api"),
+                link(resourceName + "-collection", "/api/" + resourceName));
     }
 
-    public List<HateoasLink> resourcePath(String resourceName, Long resourceId, String resourceRel, String apiVersion) {
+    public List<HateoasLink> resourcePath(String resourceName, Long resourceId, String resourceRel) {
         return List.of(
-                withApiMetadata(Link.of("/api").withRel("api-root"), apiVersion),
-                withApiMetadata(Link.of("/api/" + resourceName).withRel(resourceName + "-collection"), apiVersion),
-                withApiMetadata(Link.of("/api/" + resourceName + "/" + resourceId).withRel(resourceRel), apiVersion));
+                link("api-root", "/api"),
+                link(resourceName + "-collection", "/api/" + resourceName),
+                link(resourceRel, "/api/" + resourceName + "/" + resourceId));
     }
 
-    public List<HateoasLink> bookCollectionPath(int page, int size, String apiVersion) {
+    public List<HateoasLink> bookCollectionPath(int page, int size) {
         return List.of(
-                withApiMetadata(Link.of("/api").withRel("api-root"), apiVersion),
-                withApiMetadata(Link.of("/api/books").withRel("books-collection"), apiVersion),
-                withApiMetadata(Link.of("/api/books?page=" + page + "&size=" + size).withRel("books-page"), apiVersion));
+                link("api-root", "/api"),
+                link("books-collection", "/api/books"),
+                link("books-page", "/api/books?page=" + page + "&size=" + size));
     }
 
-    public List<HateoasLink> bookResourcePath(Long bookId, String apiVersion) {
+    public List<HateoasLink> bookResourcePath(Long bookId) {
         return List.of(
-                withApiMetadata(Link.of("/api").withRel("api-root"), apiVersion),
-                withApiMetadata(Link.of("/api/books").withRel("books-collection"), apiVersion),
-                withApiMetadata(Link.of("/api/books/" + bookId).withRel("book-resource"), apiVersion));
+                link("api-root", "/api"),
+                link("books-collection", "/api/books"),
+                link("book-resource", "/api/books/" + bookId));
     }
 
-    public HateoasLink authorResourcePath(Long authorId, String apiVersion) {
-        return withApiMetadata(Link.of("/api/authors/" + authorId).withRel("author-resource"), apiVersion);
+    public HateoasLink authorResourcePath(Long authorId) {
+        return link("author-resource", "/api/authors/" + authorId);
     }
 
-    public HateoasLink publisherResourcePath(Long publisherId, String apiVersion) {
-        return withApiMetadata(Link.of("/api/publishers/" + publisherId).withRel("publisher-resource"), apiVersion);
+    public HateoasLink publisherResourcePath(Long publisherId) {
+        return link("publisher-resource", "/api/publishers/" + publisherId);
+    }
+
+    private HateoasLink link(String rel, String href) {
+        return new HateoasLink(rel, href, List.of());
     }
 }

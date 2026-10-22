@@ -18,4 +18,9 @@ public class CollectionHateoas<T> extends HateoasModel {
     public Map<String, List<T>> getEmbedded() {
         return Map.of(collectionName, items);
     }
+
+    @Override
+    public List<T> nestedModels() {
+        return items;
+    }
 }

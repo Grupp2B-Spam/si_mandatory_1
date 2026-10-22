@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Collection;
+import java.util.List;
 
 public class HateoasModel {
     private final Map<String, HateoasLink> links = new LinkedHashMap<>();
@@ -20,5 +22,9 @@ public class HateoasModel {
 
     public void add(Collection<HateoasLink> links) {
         links.forEach(this::add);
+    }
+
+    public Collection<?> nestedModels() {
+        return List.of();
     }
 }

@@ -33,11 +33,10 @@ public class AuthorController {
         this.authorAssembler = authorAssembler;
     }
 
-    @PostMapping
+    @PostMapping(version = "1")
     public ResponseEntity<AuthorHateoas> create(
             @RequestBody CreateAuthorRequest request,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         ApiRole role = ApiRole.fromHeader(roleHeader);
@@ -49,39 +48,36 @@ public class AuthorController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(authorAssembler.toModel(createdAuthor, role, apiVersion));
+                .body(authorAssembler.toModel(createdAuthor, role));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", version = "1")
     public ResponseEntity<AuthorHateoas> findById(
             @PathVariable Long id,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         ApiRole role = ApiRole.fromHeader(roleHeader);
 
         return authorService.findById(id)
-                .map(author -> authorAssembler.toModel(author, role, apiVersion))
+                .map(author -> authorAssembler.toModel(author, role))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
+    @GetMapping(version = "1")
     public CollectionHateoas<AuthorHateoas> findAll(
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
-        return authorAssembler.toCollectionModel(authorService.findAll(), ApiRole.fromHeader(roleHeader), apiVersion);
+        return authorAssembler.toCollectionModel(authorService.findAll(), ApiRole.fromHeader(roleHeader));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", version = "1")
     public ResponseEntity<Void> update(
             @PathVariable Long id,
             @RequestBody Author author,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         if (!ApiRole.fromHeader(roleHeader).canWrite()) {
@@ -93,11 +89,10 @@ public class AuthorController {
                 : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", version = "1")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
             @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
-            @RequestHeader(ApiHeaders.VERSION_HEADER) String apiVersion,
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         if (!ApiRole.fromHeader(roleHeader).canWrite()) {

@@ -22,47 +22,47 @@ public class AuthorModelAssembler {
         this.pathBuilder = pathBuilder;
     }
 
-    public AuthorHateoas toModel(Author author, ApiRole role, String apiVersion) {
-        return toModel(author, role, apiVersion, true);
+    public AuthorHateoas toModel(Author author, ApiRole role) {
+        return toModel(author, role, true);
     }
 
-    private AuthorHateoas toModel(Author author, ApiRole role, String apiVersion, boolean includePathContext) {
+    private AuthorHateoas toModel(Author author, ApiRole role, boolean includePathContext) {
         AuthorHateoas authorHateoas = new AuthorHateoas(
                 author.id(),
                 author.name(),
                 author.surname());
 
         if (includePathContext) {
-            authorHateoas.add(pathBuilder.resourcePath("authors", author.id(), "author-resource", apiVersion));
+            authorHateoas.add(pathBuilder.resourcePath("authors", author.id(), "author-resource"));
         }
 
         authorHateoas.add(pathBuilder.withApiMetadata(linkTo(methodOn(AuthorController.class)
-                .findById(author.id(), null, null, null)).withSelfRel(), apiVersion));
+                .findById(author.id(), null, null)).withSelfRel()));
 
         if (role.canWrite()) {
             authorHateoas.add(pathBuilder.withApiMetadata(linkTo(methodOn(AuthorController.class)
-                    .update(author.id(), null, null, null, null)).withRel("update"), apiVersion));
+                    .update(author.id(), null, null, null)).withRel("update")));
             authorHateoas.add(pathBuilder.withApiMetadata(linkTo(methodOn(AuthorController.class)
-                    .delete(author.id(), null, null, null)).withRel("delete"), apiVersion));
+                    .delete(author.id(), null, null)).withRel("delete")));
         }
 
         return authorHateoas;
     }
 
-    public CollectionHateoas<AuthorHateoas> toCollectionModel(List<Author> authors, ApiRole role, String apiVersion) {
+    public CollectionHateoas<AuthorHateoas> toCollectionModel(List<Author> authors, ApiRole role) {
         List<AuthorHateoas> authorModels = authors.stream()
-                .map(author -> toModel(author, role, apiVersion, false))
+                .map(author -> toModel(author, role, false))
                 .toList();
 
         CollectionHateoas<AuthorHateoas> collectionModel = new CollectionHateoas<>("authors", authorModels);
         collectionModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(AuthorController.class)
-                .findAll(null, null, null)).withSelfRel(), apiVersion));
+                .findAll(null, null)).withSelfRel()));
 
-        collectionModel.add(pathBuilder.collectionPath("authors", apiVersion));
+        collectionModel.add(pathBuilder.collectionPath("authors"));
 
         if (role.canWrite()) {
             collectionModel.add(pathBuilder.withApiMetadata(linkTo(methodOn(AuthorController.class)
-                    .create(null, null, null, null)).withRel("create"), apiVersion));
+                    .create(null, null, null)).withRel("create")));
         }
 
         return collectionModel;
