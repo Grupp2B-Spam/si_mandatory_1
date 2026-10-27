@@ -1,6 +1,8 @@
 package graphQL.api;
 
 import java.util.List;
+
+import graphQL.dto.AuthorDto;
 import graphQL.dto.PublishingCompanyDto;
 import graphQL.input.PublisherInput;
 import graphQL.service.PublishingCompanyService;
@@ -37,4 +39,7 @@ public class PublisherController {
     public PublishingCompanyDto deletePublisher(@NonNull Integer id) {
         return publisherService.delete(id);
     }
+
+    // Field resolvers:
+
 }
