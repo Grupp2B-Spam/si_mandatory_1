@@ -1,0 +1,1311 @@
+{
+  "info": {
+    "name": "Library SOAP - Student Walkthrough",
+    "description": "Run in order using Collection Runner. Creates its own author, company and book, tests all 14 operations and the three faults, then deletes its example data. If interrupted, use steps 24-26 to clean up (book first). Faults normally use HTTP 500 in SOAP 1.1.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "authorId",
+      "value": ""
+    },
+    {
+      "key": "publishingCompanyId",
+      "value": ""
+    },
+    {
+      "key": "bookId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Create author",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"CreateAuthorResponse\", () => pm.expect(find(xml, \"CreateAuthorResponse\")).to.not.equal(undefined));",
+              "const id = find(xml, \"id\");",
+              "pm.test(\"Generated ID\", () => pm.expect(Number(id)).to.be.above(0));",
+              "if (pm.response.code === 200 && Number(id) > 0) pm.collectionVariables.set(\"authorId\", String(id));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreateAuthor\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreateAuthorRequest>\n      <lib:name>SOAP Student</lib:name>\n      <lib:surname>Example</lib:surname>\n    </lib:CreateAuthorRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "02 Get author",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"GetAuthorByIdResponse\", () => pm.expect(find(xml, \"GetAuthorByIdResponse\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/GetAuthorById\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:GetAuthorByIdRequest>\n      <lib:id>{{authorId}}</lib:id>\n    </lib:GetAuthorByIdRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "03 List authors",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ListAuthorsResponse\", () => pm.expect(find(xml, \"ListAuthorsResponse\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/ListAuthors\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:ListAuthorsRequest>\n\n    </lib:ListAuthorsRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "04 Update author",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"UpdateAuthorResponse\", () => pm.expect(find(xml, \"UpdateAuthorResponse\")).to.not.equal(undefined));",
+              "pm.test(\"Success acknowledgement\", () => pm.expect(String(find(xml, \"success\"))).to.equal(\"true\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/UpdateAuthor\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:UpdateAuthorRequest>\n      <lib:id>{{authorId}}</lib:id>\n      <lib:name>SOAP Updated</lib:name>\n      <lib:surname>Example</lib:surname>\n    </lib:UpdateAuthorRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "05 Create publishing company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"CreatePublishingCompanyResponse\", () => pm.expect(find(xml, \"CreatePublishingCompanyResponse\")).to.not.equal(undefined));",
+              "const id = find(xml, \"id\");",
+              "pm.test(\"Generated ID\", () => pm.expect(Number(id)).to.be.above(0));",
+              "if (pm.response.code === 200 && Number(id) > 0) pm.collectionVariables.set(\"publishingCompanyId\", String(id));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreatePublishingCompany\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreatePublishingCompanyRequest>\n      <lib:name>SOAP Example Press</lib:name>\n    </lib:CreatePublishingCompanyRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "06 Get publishing company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"GetPublishingCompanyByIdResponse\", () => pm.expect(find(xml, \"GetPublishingCompanyByIdResponse\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/GetPublishingCompanyById\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:GetPublishingCompanyByIdRequest>\n      <lib:id>{{publishingCompanyId}}</lib:id>\n    </lib:GetPublishingCompanyByIdRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "07 List publishing companies",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ListPublishingCompaniesResponse\", () => pm.expect(find(xml, \"ListPublishingCompaniesResponse\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/ListPublishingCompanies\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:ListPublishingCompaniesRequest>\n\n    </lib:ListPublishingCompaniesRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "08 Update publishing company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"UpdatePublishingCompanyResponse\", () => pm.expect(find(xml, \"UpdatePublishingCompanyResponse\")).to.not.equal(undefined));",
+              "pm.test(\"Success acknowledgement\", () => pm.expect(String(find(xml, \"success\"))).to.equal(\"true\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/UpdatePublishingCompany\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:UpdatePublishingCompanyRequest>\n      <lib:id>{{publishingCompanyId}}</lib:id>\n      <lib:name>SOAP Updated Press</lib:name>\n    </lib:UpdatePublishingCompanyRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "09 Create book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"CreateBookResponse\", () => pm.expect(find(xml, \"CreateBookResponse\")).to.not.equal(undefined));",
+              "const id = find(xml, \"id\");",
+              "pm.test(\"Generated ID\", () => pm.expect(Number(id)).to.be.above(0));",
+              "if (pm.response.code === 200 && Number(id) > 0) pm.collectionVariables.set(\"bookId\", String(id));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreateBook\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreateBookRequest>\n      <lib:title>Learning SOAP</lib:title>\n      <lib:authorId>{{authorId}}</lib:authorId>\n      <lib:publishingCompanyId>{{publishingCompanyId}}</lib:publishingCompanyId>\n      <lib:publishingYear>2024</lib:publishingYear>\n    </lib:CreateBookRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "10 Get book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"GetBookByIdResponse\", () => pm.expect(find(xml, \"GetBookByIdResponse\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/GetBookById\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:GetBookByIdRequest>\n      <lib:id>{{bookId}}</lib:id>\n    </lib:GetBookByIdRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "11 Update book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"UpdateBookResponse\", () => pm.expect(find(xml, \"UpdateBookResponse\")).to.not.equal(undefined));",
+              "pm.test(\"Success acknowledgement\", () => pm.expect(String(find(xml, \"success\"))).to.equal(\"true\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/UpdateBook\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:UpdateBookRequest>\n      <lib:id>{{bookId}}</lib:id>\n      <lib:title>Learning SOAP - revised</lib:title>\n      <lib:authorId>{{authorId}}</lib:authorId>\n      <lib:publishingCompanyId>{{publishingCompanyId}}</lib:publishingCompanyId>\n      <lib:publishingYear>2025</lib:publishingYear>\n    </lib:UpdateBookRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "12 Cannot delete referenced author",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ConflictFault\", () => pm.expect(find(xml, \"ConflictFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/DeleteAuthor\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:DeleteAuthorRequest>\n      <lib:id>{{authorId}}</lib:id>\n    </lib:DeleteAuthorRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "13 Cannot delete referenced publishing company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ConflictFault\", () => pm.expect(find(xml, \"ConflictFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/DeletePublishingCompany\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:DeletePublishingCompanyRequest>\n      <lib:id>{{publishingCompanyId}}</lib:id>\n    </lib:DeletePublishingCompanyRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "14 Reject year before 1900",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ValidationFault\", () => pm.expect(find(xml, \"ValidationFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreateBook\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreateBookRequest>\n      <lib:title>Learning SOAP</lib:title>\n      <lib:authorId>{{authorId}}</lib:authorId>\n      <lib:publishingCompanyId>{{publishingCompanyId}}</lib:publishingCompanyId>\n      <lib:publishingYear>1899</lib:publishingYear>\n    </lib:CreateBookRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "15 Reject missing title",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ValidationFault\", () => pm.expect(find(xml, \"ValidationFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreateBook\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreateBookRequest>\n      <lib:authorId>{{authorId}}</lib:authorId>\n      <lib:publishingCompanyId>{{publishingCompanyId}}</lib:publishingCompanyId>\n      <lib:publishingYear>2024</lib:publishingYear>\n    </lib:CreateBookRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "16 Reject nonexisting author",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ValidationFault\", () => pm.expect(find(xml, \"ValidationFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreateBook\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreateBookRequest>\n      <lib:title>Learning SOAP</lib:title>\n      <lib:authorId>2147483647</lib:authorId>\n      <lib:publishingCompanyId>{{publishingCompanyId}}</lib:publishingCompanyId>\n      <lib:publishingYear>2024</lib:publishingYear>\n    </lib:CreateBookRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "17 Reject nonexisting publishing company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ValidationFault\", () => pm.expect(find(xml, \"ValidationFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreateBook\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreateBookRequest>\n      <lib:title>Learning SOAP</lib:title>\n      <lib:authorId>{{authorId}}</lib:authorId>\n      <lib:publishingCompanyId>2147483647</lib:publishingCompanyId>\n      <lib:publishingYear>2024</lib:publishingYear>\n    </lib:CreateBookRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "18 Reject blank author name",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ValidationFault\", () => pm.expect(find(xml, \"ValidationFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreateAuthor\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreateAuthorRequest>\n      <lib:name>   </lib:name>\n      <lib:surname>Example</lib:surname>\n    </lib:CreateAuthorRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "19 Reject noninteger year",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ValidationFault\", () => pm.expect(find(xml, \"ValidationFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreateBook\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreateBookRequest>\n      <lib:title>Learning SOAP</lib:title>\n      <lib:authorId>{{authorId}}</lib:authorId>\n      <lib:publishingCompanyId>{{publishingCompanyId}}</lib:publishingCompanyId>\n      <lib:publishingYear>abc</lib:publishingYear>\n    </lib:CreateBookRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "20 Reject blank company name",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"ValidationFault\", () => pm.expect(find(xml, \"ValidationFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/CreatePublishingCompany\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:CreatePublishingCompanyRequest>\n      <lib:name>   </lib:name>\n    </lib:CreatePublishingCompanyRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "21 Missing book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"NotFoundFault\", () => pm.expect(find(xml, \"NotFoundFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/GetBookById\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:GetBookByIdRequest>\n      <lib:id>2147483647</lib:id>\n    </lib:GetBookByIdRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "22 Missing author",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"NotFoundFault\", () => pm.expect(find(xml, \"NotFoundFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/GetAuthorById\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:GetAuthorByIdRequest>\n      <lib:id>2147483647</lib:id>\n    </lib:GetAuthorByIdRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "23 Missing company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"NotFoundFault\", () => pm.expect(find(xml, \"NotFoundFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/GetPublishingCompanyById\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:GetPublishingCompanyByIdRequest>\n      <lib:id>2147483647</lib:id>\n    </lib:GetPublishingCompanyByIdRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "24 Delete book",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"DeleteBookResponse\", () => pm.expect(find(xml, \"DeleteBookResponse\")).to.not.equal(undefined));",
+              "pm.test(\"Success acknowledgement\", () => pm.expect(String(find(xml, \"success\"))).to.equal(\"true\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/DeleteBook\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:DeleteBookRequest>\n      <lib:id>{{bookId}}</lib:id>\n    </lib:DeleteBookRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "25 Delete author",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"DeleteAuthorResponse\", () => pm.expect(find(xml, \"DeleteAuthorResponse\")).to.not.equal(undefined));",
+              "pm.test(\"Success acknowledgement\", () => pm.expect(String(find(xml, \"success\"))).to.equal(\"true\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/DeleteAuthor\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:DeleteAuthorRequest>\n      <lib:id>{{authorId}}</lib:id>\n    </lib:DeleteAuthorRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "26 Delete publishing company",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"DeletePublishingCompanyResponse\", () => pm.expect(find(xml, \"DeletePublishingCompanyResponse\")).to.not.equal(undefined));",
+              "pm.test(\"Success acknowledgement\", () => pm.expect(String(find(xml, \"success\"))).to.equal(\"true\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/DeletePublishingCompany\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:DeletePublishingCompanyRequest>\n      <lib:id>{{publishingCompanyId}}</lib:id>\n    </lib:DeletePublishingCompanyRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    },
+    {
+      "name": "27 Deleted book is gone",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 500\", () => pm.response.to.have.status(500));",
+              "const xml = xml2Json(pm.response.text());",
+              "function find(node, name) {",
+              "  if (!node || typeof node !== \"object\") return undefined;",
+              "  for (const key of Object.keys(node)) {",
+              "    if (key.split(\":\").pop() === name) return node[key];",
+              "    const found = find(node[key], name);",
+              "    if (found !== undefined) return found;",
+              "  }",
+              "}",
+              "pm.test(\"NotFoundFault\", () => pm.expect(find(xml, \"NotFoundFault\")).to.not.equal(undefined));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/xml; charset=utf-8"
+          },
+          {
+            "key": "SOAPAction",
+            "value": "\"http://example.com/library/GetBookById\""
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:GetBookByIdRequest>\n      <lib:id>{{bookId}}</lib:id>\n    </lib:GetBookByIdRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": "{{baseUrl}}/soap/library"
+      }
+    }
+  ]
+}

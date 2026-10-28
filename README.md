@@ -24,7 +24,7 @@ init.sql kører kun første gang. Hvis den bliver ændret skal databasen nulstil
 |---------|------------|------|-----------|
 | GraphQL | `graphql/` | 8080 | Quarkus   |
 | REST    | `rest/`    | 8081 |           |
-| SOAP    | `soap/`    | 8082 |           |
+| SOAP    | `soap/`    | 8082 | Spring Boot + Spring Web Services |
 | gRPC    | `grpc/`    | 9090 |           |
 
 ### GraphQL
@@ -36,6 +36,21 @@ cd graphql
 
 Endpoint: `POST http://localhost:8080/graphql`
 GraphQL UI: http://localhost:8080/q/graphql-ui
+
+### SOAP
+
+See [the SOAP walkthrough](soap/README.md) for setup, a code explanation and Postman instructions.
+
+```powershell
+cd soap
+.\mvnw.cmd spring-boot:run
+```
+
+Endpoint: `POST http://localhost:8082/soap/library`
+
+WSDL: http://localhost:8082/soap/library.wsdl
+
+Postman collection: `postman/library-soap.postman_collection.json`
 
 ## Postman
 

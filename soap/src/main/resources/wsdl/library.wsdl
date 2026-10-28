@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns="http://example.com/library"
+                  targetNamespace="http://example.com/library" name="LibraryService">
+    <wsdl:types>
+        <xs:schema>
+            <xs:import namespace="http://example.com/library" schemaLocation="librarySchema.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="CreateBookRequest"><wsdl:part name="parameters" element="tns:CreateBookRequest"/></wsdl:message>
+    <wsdl:message name="CreateBookResponse"><wsdl:part name="parameters" element="tns:CreateBookResponse"/></wsdl:message>
+    <wsdl:message name="GetBookByIdRequest"><wsdl:part name="parameters" element="tns:GetBookByIdRequest"/></wsdl:message>
+    <wsdl:message name="GetBookByIdResponse"><wsdl:part name="parameters" element="tns:GetBookByIdResponse"/></wsdl:message>
+    <wsdl:message name="UpdateBookRequest"><wsdl:part name="parameters" element="tns:UpdateBookRequest"/></wsdl:message>
+    <wsdl:message name="UpdateBookResponse"><wsdl:part name="parameters" element="tns:UpdateBookResponse"/></wsdl:message>
+    <wsdl:message name="DeleteBookRequest"><wsdl:part name="parameters" element="tns:DeleteBookRequest"/></wsdl:message>
+    <wsdl:message name="DeleteBookResponse"><wsdl:part name="parameters" element="tns:DeleteBookResponse"/></wsdl:message>
+    <wsdl:message name="CreateAuthorRequest"><wsdl:part name="parameters" element="tns:CreateAuthorRequest"/></wsdl:message>
+    <wsdl:message name="CreateAuthorResponse"><wsdl:part name="parameters" element="tns:CreateAuthorResponse"/></wsdl:message>
+    <wsdl:message name="GetAuthorByIdRequest"><wsdl:part name="parameters" element="tns:GetAuthorByIdRequest"/></wsdl:message>
+    <wsdl:message name="GetAuthorByIdResponse"><wsdl:part name="parameters" element="tns:GetAuthorByIdResponse"/></wsdl:message>
+    <wsdl:message name="ListAuthorsRequest"><wsdl:part name="parameters" element="tns:ListAuthorsRequest"/></wsdl:message>
+    <wsdl:message name="ListAuthorsResponse"><wsdl:part name="parameters" element="tns:ListAuthorsResponse"/></wsdl:message>
+    <wsdl:message name="UpdateAuthorRequest"><wsdl:part name="parameters" element="tns:UpdateAuthorRequest"/></wsdl:message>
+    <wsdl:message name="UpdateAuthorResponse"><wsdl:part name="parameters" element="tns:UpdateAuthorResponse"/></wsdl:message>
+    <wsdl:message name="DeleteAuthorRequest"><wsdl:part name="parameters" element="tns:DeleteAuthorRequest"/></wsdl:message>
+    <wsdl:message name="DeleteAuthorResponse"><wsdl:part name="parameters" element="tns:DeleteAuthorResponse"/></wsdl:message>
+    <wsdl:message name="CreatePublishingCompanyRequest"><wsdl:part name="parameters" element="tns:CreatePublishingCompanyRequest"/></wsdl:message>
+    <wsdl:message name="CreatePublishingCompanyResponse"><wsdl:part name="parameters" element="tns:CreatePublishingCompanyResponse"/></wsdl:message>
+    <wsdl:message name="GetPublishingCompanyByIdRequest"><wsdl:part name="parameters" element="tns:GetPublishingCompanyByIdRequest"/></wsdl:message>
+    <wsdl:message name="GetPublishingCompanyByIdResponse"><wsdl:part name="parameters" element="tns:GetPublishingCompanyByIdResponse"/></wsdl:message>
+    <wsdl:message name="ListPublishingCompaniesRequest"><wsdl:part name="parameters" element="tns:ListPublishingCompaniesRequest"/></wsdl:message>
+    <wsdl:message name="ListPublishingCompaniesResponse"><wsdl:part name="parameters" element="tns:ListPublishingCompaniesResponse"/></wsdl:message>
+    <wsdl:message name="UpdatePublishingCompanyRequest"><wsdl:part name="parameters" element="tns:UpdatePublishingCompanyRequest"/></wsdl:message>
+    <wsdl:message name="UpdatePublishingCompanyResponse"><wsdl:part name="parameters" element="tns:UpdatePublishingCompanyResponse"/></wsdl:message>
+    <wsdl:message name="DeletePublishingCompanyRequest"><wsdl:part name="parameters" element="tns:DeletePublishingCompanyRequest"/></wsdl:message>
+    <wsdl:message name="DeletePublishingCompanyResponse"><wsdl:part name="parameters" element="tns:DeletePublishingCompanyResponse"/></wsdl:message>
+    <wsdl:message name="ValidationFault"><wsdl:part name="fault" element="tns:ValidationFault"/></wsdl:message>
+    <wsdl:message name="NotFoundFault"><wsdl:part name="fault" element="tns:NotFoundFault"/></wsdl:message>
+    <wsdl:message name="ConflictFault"><wsdl:part name="fault" element="tns:ConflictFault"/></wsdl:message>
+    <wsdl:portType name="LibraryPort">
+        <wsdl:operation name="CreateBook">
+            <wsdl:input message="tns:CreateBookRequest"/>
+            <wsdl:output message="tns:CreateBookResponse"/>
+            <wsdl:fault name="ValidationFault" message="tns:ValidationFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetBookById">
+            <wsdl:input message="tns:GetBookByIdRequest"/>
+            <wsdl:output message="tns:GetBookByIdResponse"/>
+            <wsdl:fault name="NotFoundFault" message="tns:NotFoundFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateBook">
+            <wsdl:input message="tns:UpdateBookRequest"/>
+            <wsdl:output message="tns:UpdateBookResponse"/>
+            <wsdl:fault name="ValidationFault" message="tns:ValidationFault"/>
+            <wsdl:fault name="NotFoundFault" message="tns:NotFoundFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteBook">
+            <wsdl:input message="tns:DeleteBookRequest"/>
+            <wsdl:output message="tns:DeleteBookResponse"/>
+            <wsdl:fault name="NotFoundFault" message="tns:NotFoundFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="CreateAuthor">
+            <wsdl:input message="tns:CreateAuthorRequest"/>
+            <wsdl:output message="tns:CreateAuthorResponse"/>
+            <wsdl:fault name="ValidationFault" message="tns:ValidationFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAuthorById">
+            <wsdl:input message="tns:GetAuthorByIdRequest"/>
+            <wsdl:output message="tns:GetAuthorByIdResponse"/>
+            <wsdl:fault name="NotFoundFault" message="tns:NotFoundFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="ListAuthors">
+            <wsdl:input message="tns:ListAuthorsRequest"/>
+            <wsdl:output message="tns:ListAuthorsResponse"/>
+
+        </wsdl:operation>
+        <wsdl:operation name="UpdateAuthor">
+            <wsdl:input message="tns:UpdateAuthorRequest"/>
+            <wsdl:output message="tns:UpdateAuthorResponse"/>
+            <wsdl:fault name="ValidationFault" message="tns:ValidationFault"/>
+            <wsdl:fault name="NotFoundFault" message="tns:NotFoundFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteAuthor">
+            <wsdl:input message="tns:DeleteAuthorRequest"/>
+            <wsdl:output message="tns:DeleteAuthorResponse"/>
+            <wsdl:fault name="NotFoundFault" message="tns:NotFoundFault"/>
+            <wsdl:fault name="ConflictFault" message="tns:ConflictFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="CreatePublishingCompany">
+            <wsdl:input message="tns:CreatePublishingCompanyRequest"/>
+            <wsdl:output message="tns:CreatePublishingCompanyResponse"/>
+            <wsdl:fault name="ValidationFault" message="tns:ValidationFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetPublishingCompanyById">
+            <wsdl:input message="tns:GetPublishingCompanyByIdRequest"/>
+            <wsdl:output message="tns:GetPublishingCompanyByIdResponse"/>
+            <wsdl:fault name="NotFoundFault" message="tns:NotFoundFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="ListPublishingCompanies">
+            <wsdl:input message="tns:ListPublishingCompaniesRequest"/>
+            <wsdl:output message="tns:ListPublishingCompaniesResponse"/>
+
+        </wsdl:operation>
+        <wsdl:operation name="UpdatePublishingCompany">
+            <wsdl:input message="tns:UpdatePublishingCompanyRequest"/>
+            <wsdl:output message="tns:UpdatePublishingCompanyResponse"/>
+            <wsdl:fault name="ValidationFault" message="tns:ValidationFault"/>
+            <wsdl:fault name="NotFoundFault" message="tns:NotFoundFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="DeletePublishingCompany">
+            <wsdl:input message="tns:DeletePublishingCompanyRequest"/>
+            <wsdl:output message="tns:DeletePublishingCompanyResponse"/>
+            <wsdl:fault name="NotFoundFault" message="tns:NotFoundFault"/>
+            <wsdl:fault name="ConflictFault" message="tns:ConflictFault"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="LibrarySoapBinding" type="tns:LibraryPort">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="CreateBook">
+            <soap:operation soapAction="http://example.com/library/CreateBook"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="ValidationFault"><soap:fault name="ValidationFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetBookById">
+            <soap:operation soapAction="http://example.com/library/GetBookById"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="NotFoundFault"><soap:fault name="NotFoundFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="UpdateBook">
+            <soap:operation soapAction="http://example.com/library/UpdateBook"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="ValidationFault"><soap:fault name="ValidationFault" use="literal"/></wsdl:fault>
+            <wsdl:fault name="NotFoundFault"><soap:fault name="NotFoundFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteBook">
+            <soap:operation soapAction="http://example.com/library/DeleteBook"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="NotFoundFault"><soap:fault name="NotFoundFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="CreateAuthor">
+            <soap:operation soapAction="http://example.com/library/CreateAuthor"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="ValidationFault"><soap:fault name="ValidationFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetAuthorById">
+            <soap:operation soapAction="http://example.com/library/GetAuthorById"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="NotFoundFault"><soap:fault name="NotFoundFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="ListAuthors">
+            <soap:operation soapAction="http://example.com/library/ListAuthors"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="UpdateAuthor">
+            <soap:operation soapAction="http://example.com/library/UpdateAuthor"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="ValidationFault"><soap:fault name="ValidationFault" use="literal"/></wsdl:fault>
+            <wsdl:fault name="NotFoundFault"><soap:fault name="NotFoundFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteAuthor">
+            <soap:operation soapAction="http://example.com/library/DeleteAuthor"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="NotFoundFault"><soap:fault name="NotFoundFault" use="literal"/></wsdl:fault>
+            <wsdl:fault name="ConflictFault"><soap:fault name="ConflictFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="CreatePublishingCompany">
+            <soap:operation soapAction="http://example.com/library/CreatePublishingCompany"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="ValidationFault"><soap:fault name="ValidationFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetPublishingCompanyById">
+            <soap:operation soapAction="http://example.com/library/GetPublishingCompanyById"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="NotFoundFault"><soap:fault name="NotFoundFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="ListPublishingCompanies">
+            <soap:operation soapAction="http://example.com/library/ListPublishingCompanies"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="UpdatePublishingCompany">
+            <soap:operation soapAction="http://example.com/library/UpdatePublishingCompany"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="ValidationFault"><soap:fault name="ValidationFault" use="literal"/></wsdl:fault>
+            <wsdl:fault name="NotFoundFault"><soap:fault name="NotFoundFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="DeletePublishingCompany">
+            <soap:operation soapAction="http://example.com/library/DeletePublishingCompany"/>
+            <wsdl:input><soap:body use="literal"/></wsdl:input>
+            <wsdl:output><soap:body use="literal"/></wsdl:output>
+            <wsdl:fault name="NotFoundFault"><soap:fault name="NotFoundFault" use="literal"/></wsdl:fault>
+            <wsdl:fault name="ConflictFault"><soap:fault name="ConflictFault" use="literal"/></wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="LibraryService">
+        <wsdl:port name="LibrarySoapPort" binding="tns:LibrarySoapBinding">
+            <soap:address location="http://localhost:8082/soap/library"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
