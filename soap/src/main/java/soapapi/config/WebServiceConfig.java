@@ -1,4 +1,4 @@
-package com.example.librarysoap.config;
+package soapapi.config;
 
 import java.util.List;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -12,7 +12,7 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
-import com.example.librarysoap.fault.RequestValidationInterceptor;
+import soapapi.fault.RequestValidationInterceptor;
 
 @EnableWs
 @Configuration
@@ -44,8 +44,7 @@ public class WebServiceConfig implements WsConfigurer {
         RequestValidationInterceptor validation = new RequestValidationInterceptor();
         validation.setSchema(new ClassPathResource("wsdl/librarySchema.xsd"));
         validation.setValidateRequest(true);
-        // Existing shared database rows can contain empty surnames. We validate new input,
-        // but do not impose the stricter create/update rules on existing response data.
+        // Existing shared database rows can contain empty surnames. We validate new input,but do not impose the stricter create/update rules on existing response data.
         validation.setValidateResponse(false);
         return validation;
     }

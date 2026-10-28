@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Library SOAP - Student Walkthrough",
+    "name": "SOAP API",
     "description": "Run in order using Collection Runner. Creates its own author, company and book, tests all 14 operations and the three faults, then deletes its example data. If interrupted, use steps 24-26 to clean up (book first). Faults normally use HTTP 500 in SOAP 1.1.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },

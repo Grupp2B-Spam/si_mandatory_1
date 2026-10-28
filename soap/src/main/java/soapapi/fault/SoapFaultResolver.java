@@ -1,16 +1,15 @@
-package com.example.librarysoap.fault;
+package soapapi.fault;
 
 import java.util.Locale;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
+import javax.xml.namespace.QName;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import soapapi.generated.FaultDetail;
 import org.springframework.stereotype.Component;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.AbstractEndpointExceptionResolver;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 @Component
 public class SoapFaultResolver extends AbstractEndpointExceptionResolver {
@@ -42,17 +41,15 @@ public class SoapFaultResolver extends AbstractEndpointExceptionResolver {
         return true;
     }
 
-    // Use XML nodes so characters such as & and < in a message are escaped correctly.
+    // JAXB writes the fault detail using the same XML type defined in our XSD.
     public static void writeDetail(SoapFault fault, String faultName, String message) {
         try {
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element detail = document.createElementNS(NAMESPACE, "lib:" + faultName);
-            Element text = document.createElementNS(NAMESPACE, "lib:message");
-            text.setTextContent(message);
-            detail.appendChild(text);
-            document.appendChild(detail);
-            TransformerFactory.newInstance().newTransformer()
-                    .transform(new DOMSource(document), fault.addFaultDetail().getResult());
+            FaultDetail detail = new FaultDetail();
+            detail.setMessage(message);
+            JAXBElement<FaultDetail> element = new JAXBElement<>(
+                    new QName(NAMESPACE, faultName), FaultDetail.class, detail);
+            JAXBContext.newInstance(FaultDetail.class).createMarshaller()
+                    .marshal(element, fault.addFaultDetail().getResult());
         } catch (Exception exception) {
             throw new IllegalStateException("Could not write SOAP fault", exception);
         }

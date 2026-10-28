@@ -1,11 +1,11 @@
-package com.example.librarysoap;
+package soapapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SoapApplication {
+public class SoapApiApplication {
     public static void main(String[] args) {
-        SpringApplication.run(SoapApplication.class, args);
+        SpringApplication.run(SoapApiApplication.class, args);
     }
 }

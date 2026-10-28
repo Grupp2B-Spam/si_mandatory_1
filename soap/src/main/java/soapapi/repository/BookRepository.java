@@ -1,6 +1,6 @@
-package com.example.librarysoap.repository;
+package soapapi.repository;
 
-import com.example.librarysoap.generated.Book;
+import soapapi.generated.Book;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;

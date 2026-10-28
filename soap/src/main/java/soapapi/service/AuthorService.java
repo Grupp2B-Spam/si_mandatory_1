@@ -1,9 +1,9 @@
-package com.example.librarysoap.service;
+package soapapi.service;
 
-import com.example.librarysoap.fault.ConflictException;
-import com.example.librarysoap.fault.NotFoundException;
-import com.example.librarysoap.generated.Author;
-import com.example.librarysoap.repository.AuthorRepository;
+import soapapi.fault.ConflictException;
+import soapapi.fault.NotFoundException;
+import soapapi.generated.Author;
+import soapapi.repository.AuthorRepository;
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -28,16 +28,11 @@ public class AuthorService {
 
     @Transactional
     public int create(String name, String surname) {
-        Validation.requireText(name, "name", 40);
-        Validation.requireText(surname, "surname", 60);
         return repository.create(name, surname);
     }
 
     @Transactional
     public void update(int id, String name, String surname) {
-        getById(id);
-        Validation.requireText(name, "name", 40);
-        Validation.requireText(surname, "surname", 60);
         if (repository.update(id, name, surname) == 0) {
             throw new NotFoundException("Author " + id + " does not exist");
         }
@@ -45,7 +40,6 @@ public class AuthorService {
 
     @Transactional
     public void delete(int id) {
-        getById(id);
         if (repository.isReferenced(id)) {
             throw new ConflictException("Author " + id + " is referenced by a book");
         }

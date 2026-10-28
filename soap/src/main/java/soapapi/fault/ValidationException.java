@@ -1,4 +1,4 @@
-package com.example.librarysoap.fault;
+package soapapi.fault;
 
 public class ValidationException extends RuntimeException {
     public ValidationException(String message) {

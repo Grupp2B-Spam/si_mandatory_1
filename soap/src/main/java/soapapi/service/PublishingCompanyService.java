@@ -1,9 +1,9 @@
-package com.example.librarysoap.service;
+package soapapi.service;
 
-import com.example.librarysoap.fault.ConflictException;
-import com.example.librarysoap.fault.NotFoundException;
-import com.example.librarysoap.generated.PublishingCompany;
-import com.example.librarysoap.repository.PublishingCompanyRepository;
+import soapapi.fault.ConflictException;
+import soapapi.fault.NotFoundException;
+import soapapi.generated.PublishingCompany;
+import soapapi.repository.PublishingCompanyRepository;
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -28,14 +28,11 @@ public class PublishingCompanyService {
 
     @Transactional
     public int create(String name) {
-        Validation.requireText(name, "name", 40);
         return repository.create(name);
     }
 
     @Transactional
     public void update(int id, String name) {
-        getById(id);
-        Validation.requireText(name, "name", 40);
         if (repository.update(id, name) == 0) {
             throw new NotFoundException("PublishingCompany " + id + " does not exist");
         }
@@ -43,7 +40,6 @@ public class PublishingCompanyService {
 
     @Transactional
     public void delete(int id) {
-        getById(id);
         if (repository.isReferenced(id)) {
             throw new ConflictException("PublishingCompany " + id + " is referenced by a book");
         }
@@ -52,8 +48,7 @@ public class PublishingCompanyService {
                 throw new NotFoundException("PublishingCompany " + id + " does not exist");
             }
         } catch (DataIntegrityViolationException exception) {
-            // The foreign key also protects us if another request creates a book
-            // between the reference check and the DELETE.
+            // The foreign key protects us if another request creates a book between the reference check and the DELETE.
             throw new ConflictException("PublishingCompany " + id + " is referenced by a book");
         }
     }

@@ -1,11 +1,11 @@
-package com.example.librarysoap.service;
+package soapapi.service;
 
-import com.example.librarysoap.fault.NotFoundException;
-import com.example.librarysoap.fault.ValidationException;
-import com.example.librarysoap.generated.Book;
-import com.example.librarysoap.repository.AuthorRepository;
-import com.example.librarysoap.repository.BookRepository;
-import com.example.librarysoap.repository.PublishingCompanyRepository;
+import soapapi.fault.NotFoundException;
+import soapapi.fault.ValidationException;
+import soapapi.generated.Book;
+import soapapi.repository.AuthorRepository;
+import soapapi.repository.BookRepository;
+import soapapi.repository.PublishingCompanyRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ public class BookService {
 
     @Transactional
     public int create(String title, int authorId, int publishingCompanyId, int publishingYear) {
-        validate(title, authorId, publishingCompanyId, publishingYear);
+        validateReferences(authorId, publishingCompanyId);
         try {
             return books.create(title, authorId, publishingCompanyId, publishingYear);
         } catch (DataIntegrityViolationException exception) {
@@ -39,8 +39,7 @@ public class BookService {
 
     @Transactional
     public void update(int id, String title, int authorId, int publishingCompanyId, int publishingYear) {
-        getById(id);
-        validate(title, authorId, publishingCompanyId, publishingYear);
+        validateReferences(authorId, publishingCompanyId);
         try {
             if (books.update(id, title, authorId, publishingCompanyId, publishingYear) == 0) {
                 throw new NotFoundException("Book " + id + " does not exist");
@@ -57,11 +56,7 @@ public class BookService {
         }
     }
 
-    private void validate(String title, int authorId, int publishingCompanyId, int publishingYear) {
-        Validation.requireText(title, "title", 255);
-        if (publishingYear < 1900) {
-            throw new ValidationException("publishingYear must be at least 1900");
-        }
+    private void validateReferences(int authorId, int publishingCompanyId) {
         // XSD can check an integer's format, but cannot check our database.
         if (authors.findById(authorId).isEmpty()) {
             throw new ValidationException("Author " + authorId + " does not exist");

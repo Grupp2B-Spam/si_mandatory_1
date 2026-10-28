@@ -20,12 +20,12 @@ init.sql kører kun første gang. Hvis den bliver ændret skal databasen nulstil
 
 ## APIs
 
-| API     | Mappe      | Port | Framework |
-|---------|------------|------|-----------|
-| GraphQL | `graphql/` | 8080 | Quarkus   |
-| REST    | `rest/`    | 8081 |           |
+| API     | Mappe      | Port | Framework                         |
+|---------|------------|------|-----------------------------------|
+| GraphQL | `graphql/` | 8080 | Quarkus                           |
+| REST    | `rest/`    | 8081 |                                   |
 | SOAP    | `soap/`    | 8082 | Spring Boot + Spring Web Services |
-| gRPC    | `grpc/`    | 9090 |           |
+| gRPC    | `grpc/`    | 9090 |                                   |
 
 ### GraphQL
 
@@ -39,7 +39,7 @@ GraphQL UI: http://localhost:8080/q/graphql-ui
 
 ### SOAP
 
-See [the SOAP walkthrough](soap/README.md) for setup, a code explanation and Postman instructions.
+See [the SOAP README](soap/README.md) for setup and Postman instructions.
 
 ```powershell
 cd soap
@@ -50,7 +50,7 @@ Endpoint: `POST http://localhost:8082/soap/library`
 
 WSDL: http://localhost:8082/soap/library.wsdl
 
-Postman collection: `postman/library-soap.postman_collection.json`
+Postman collection: `postman/soapapi.postman_collection.json`
 
 ## Postman
 

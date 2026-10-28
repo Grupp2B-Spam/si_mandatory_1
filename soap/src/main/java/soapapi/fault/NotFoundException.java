@@ -1,4 +1,4 @@
-package com.example.librarysoap.fault;
+package soapapi.fault;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

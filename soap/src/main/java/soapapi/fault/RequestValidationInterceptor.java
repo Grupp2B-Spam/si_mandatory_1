@@ -1,4 +1,4 @@
-package com.example.librarysoap.fault;
+package soapapi.fault;
 
 import java.util.Locale;
 import org.springframework.ws.context.MessageContext;

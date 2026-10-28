@@ -8,8 +8,8 @@
         <version>3.5.7</version>
         <relativePath/>
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>library-soap</artifactId>
+    <groupId>soapapi</groupId>
+    <artifactId>soapapi</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties><java.version>21</java.version></properties>
     <dependencies>
@@ -30,16 +30,6 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -53,7 +43,7 @@
                 </executions>
                 <configuration>
                     <sources><source>src/main/resources/wsdl/librarySchema.xsd</source></sources>
-                    <packageName>com.example.librarysoap.generated</packageName>
+                    <packageName>soapapi.generated</packageName>
                 </configuration>
             </plugin>
             <plugin>
