@@ -44,11 +44,11 @@ public class BookController {
 
     // field resolvers
 
-    public AuthorDto author(@Source BookDto book) {
+    public @NonNull AuthorDto author(@Source BookDto book) {
         return authorService.getById(book.authorId());
     }
 
-    public PublishingCompanyDto publisher(@Source BookDto book) {
+    public @NonNull PublishingCompanyDto publisher(@Source BookDto book) {
         return publishingCompanyService.getById(book.publisherId());
     }
 }
