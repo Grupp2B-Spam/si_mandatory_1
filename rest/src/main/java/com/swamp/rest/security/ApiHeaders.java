@@ -1,0 +1,9 @@
+package com.swamp.rest.security;
+
+public final class ApiHeaders {
+    public static final String VERSION_HEADER = "X-API-Version";
+    public static final String ACCEPT_HEADER = "Accept";
+
+    private ApiHeaders() {
+    }
+}
