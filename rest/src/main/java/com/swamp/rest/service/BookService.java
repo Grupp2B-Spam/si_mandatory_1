@@ -16,7 +16,8 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public Book create(Book book) {
+    public long create(Book book) {
+
         return bookRepository.create(book);
     }
 

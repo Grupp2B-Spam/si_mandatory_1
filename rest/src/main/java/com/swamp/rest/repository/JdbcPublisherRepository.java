@@ -26,7 +26,9 @@ public class JdbcPublisherRepository implements PublisherRepository {
                 .param("name", publisher.name())
                 .update(keyHolder);
 
-        return new Publisher(keyHolder.getKey().longValue(), publisher.name());
+        long publisherId = (int) keyHolder.getKeys().get("npublishingcompanyid");
+
+        return new Publisher(publisherId, publisher.name());
     }
 
     @Override

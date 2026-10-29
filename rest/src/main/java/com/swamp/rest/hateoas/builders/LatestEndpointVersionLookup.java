@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +40,9 @@ public class LatestEndpointVersionLookup {
             return routes().stream().map(VersionedRoute::version).max(Integer::compareTo)
                     .map(List::of).orElseGet(List::of);
         }
-        return matchingVersions.stream().max(Integer::compareTo).map(List::of).orElseGet(List::of);
+
+
+        return matchingVersions.stream().sorted().toList();
     }
 
     private List<VersionedRoute> routes() {

@@ -27,7 +27,8 @@ public class JdbcAuthorRepository implements AuthorRepository {
                 .param("surname", author.surname())
                 .update(keyHolder);
 
-        return new Author(keyHolder.getKey().longValue(), author.name(), author.surname());
+        long authorId = (int) keyHolder.getKeys().get("nauthorid");
+        return new Author(authorId, author.name(), author.surname());
     }
 
     @Override

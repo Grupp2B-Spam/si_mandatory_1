@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.swamp.rest.model.records.Book;
 
 public interface BookRepository {
-    Book create(Book book);
+    long create(Book book);
 
     Optional<Book> findById(Long id);
 

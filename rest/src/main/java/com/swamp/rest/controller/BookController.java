@@ -44,12 +44,12 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        Book createdBook = bookService.create(request.toBook());
+        long createdBookId = bookService.create(request.toBook());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(bookAssembler.toModel(createdBook, role));
-    }
+                .body(bookService.findById(createdBookId).map(book -> bookAssembler.toModel(book, role)).get());
+        }
 
     @GetMapping(value = "/{id}", version = "1")
     public ResponseEntity<BookHateoas> findById(
@@ -58,11 +58,13 @@ public class BookController {
             @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
     ) {
         ApiRole role = ApiRole.fromHeader(roleHeader);
+        var book = bookService.findById(id);
 
-        return bookService.findById(id)
-                .map(book -> bookAssembler.toModel(book, role))
+        var hateoas = book.map(bookData -> bookAssembler.toModel(bookData, role))
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+        return hateoas;
+                
     }
 
     @GetMapping(version = "1")

@@ -186,7 +186,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": {{bookId}},\n  \"title\": \"Updated Book\",\n  \"authorId\": 1,\n  \"publishingYear\": 2025,\n  \"publishingCompanyId\": 1\n}"
+              "raw": "{\n   \"title\": \"Updated Book\",\n  \"authorId\": 1,\n  \"publishingYear\": 2025,\n  \"publishingCompanyId\": 1\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/books/{{bookId}}",
@@ -360,7 +360,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": {{authorId}},\n  \"name\": \"Updated\",\n  \"surname\": \"Author\"\n}"
+              "raw": "{\n  \"name\": \"Updated\",\n  \"surname\": \"Author\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/authors/{{authorId}}",
@@ -534,7 +534,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"id\": {{publisherId}},\n  \"name\": \"Updated Publisher\"\n}"
+              "raw": "{\n \"name\": \"Updated Publisher\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/publishers/{{publisherId}}",

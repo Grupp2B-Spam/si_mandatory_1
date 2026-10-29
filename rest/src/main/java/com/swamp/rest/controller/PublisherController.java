@@ -89,6 +89,22 @@ public class PublisherController {
                 : ResponseEntity.notFound().build();
     }
 
+    @PutMapping(value = "/{id}", version = "6")
+    public ResponseEntity<Void> updateV6(
+            @PathVariable Long id,
+            @RequestBody Publisher publisher,
+            @RequestHeader(value = "X-User-Role", defaultValue = "user") String roleHeader,
+            @RequestHeader(ApiHeaders.ACCEPT_HEADER) String acceptHeader
+    ) {
+        if (!ApiRole.fromHeader(roleHeader).canWrite()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return publisherService.update(id, publisher)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping(value = "/{id}", version = "1")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
