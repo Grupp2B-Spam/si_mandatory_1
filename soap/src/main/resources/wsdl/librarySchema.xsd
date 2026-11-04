@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The SOAP contract: required elements occur exactly once unless stated otherwise. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://example.com/library" targetNamespace="http://example.com/library"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="PublishingYear">
+        <xs:restriction base="xs:int"><xs:minInclusive value="1900"/></xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Title">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Name">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="40"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Surname">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="60"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Book">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="authorId" type="xs:int"/>
+            <xs:element name="publishingCompanyId" type="xs:int"/>
+            <xs:element name="publishingYear" type="tns:PublishingYear"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Author">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="surname" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PublishingCompany">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AuthorList">
+        <xs:sequence>
+            <xs:element name="author" type="tns:Author" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PublishingCompanyList">
+        <xs:sequence>
+            <xs:element name="publishingCompany" type="tns:PublishingCompany" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FaultDetail">
+        <xs:sequence><xs:element name="message" type="xs:string"/></xs:sequence>
+    </xs:complexType>
+    <xs:element name="ValidationFault" type="tns:FaultDetail"/>
+    <xs:element name="NotFoundFault" type="tns:FaultDetail"/>
+    <xs:element name="ConflictFault" type="tns:FaultDetail"/>
+
+    <xs:element name="CreateBookRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="title" type="tns:Title"/>
+            <xs:element name="authorId" type="xs:int"/>
+            <xs:element name="publishingCompanyId" type="xs:int"/>
+            <xs:element name="publishingYear" type="tns:PublishingYear"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreateBookResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetBookByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetBookByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="book" type="tns:Book"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdateBookRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="title" type="tns:Title"/>
+            <xs:element name="authorId" type="xs:int"/>
+            <xs:element name="publishingCompanyId" type="xs:int"/>
+            <xs:element name="publishingYear" type="tns:PublishingYear"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdateBookResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeleteBookRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeleteBookResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreateAuthorRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="name" type="tns:Name"/>
+            <xs:element name="surname" type="tns:Surname"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreateAuthorResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetAuthorByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetAuthorByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="author" type="tns:Author"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListAuthorsRequest">
+        <xs:complexType>
+            <xs:sequence>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListAuthorsResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="authors" type="tns:AuthorList"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdateAuthorRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="name" type="tns:Name"/>
+            <xs:element name="surname" type="tns:Surname"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdateAuthorResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeleteAuthorRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeleteAuthorResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreatePublishingCompanyRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="name" type="tns:Name"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="CreatePublishingCompanyResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetPublishingCompanyByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetPublishingCompanyByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="publishingCompany" type="tns:PublishingCompany"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListPublishingCompaniesRequest">
+        <xs:complexType>
+            <xs:sequence>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ListPublishingCompaniesResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="publishingCompanies" type="tns:PublishingCompanyList"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdatePublishingCompanyRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="name" type="tns:Name"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="UpdatePublishingCompanyResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeletePublishingCompanyRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DeletePublishingCompanyResponse">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="success" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

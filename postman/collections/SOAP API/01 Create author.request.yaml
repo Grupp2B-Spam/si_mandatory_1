@@ -1,0 +1,45 @@
+$kind: http-request
+url: "{{baseUrl}}/soap/library"
+method: POST
+headers:
+  Content-Type: text/xml; charset=utf-8
+  SOAPAction: '"http://example.com/library/CreateAuthor"'
+body:
+  type: xml
+  content: >-
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:lib="http://example.com/library">
+      <soap:Body>
+        <lib:CreateAuthorRequest>
+          <lib:name>SOAP Student</lib:name>
+          <lib:surname>Example</lib:surname>
+        </lib:CreateAuthorRequest>
+      </soap:Body>
+    </soap:Envelope>
+scripts:
+  - type: afterResponse
+    code: >-
+      pm.test("HTTP 200", () => pm.response.to.have.status(200));
+
+      const xml = xml2Json(pm.response.text());
+
+      function find(node, name) {
+        if (!node || typeof node !== "object") return undefined;
+        for (const key of Object.keys(node)) {
+          if (key.split(":").pop() === name) return node[key];
+          const found = find(node[key], name);
+          if (found !== undefined) return found;
+        }
+      }
+
+      pm.test("CreateAuthorResponse", () => pm.expect(find(xml,
+      "CreateAuthorResponse")).to.not.equal(undefined));
+
+      const id = find(xml, "id");
+
+      pm.test("Generated ID", () => pm.expect(Number(id)).to.be.above(0));
+
+      if (pm.response.code === 200 && Number(id) > 0)
+      pm.collectionVariables.set("authorId", String(id));
+    language: text/javascript
+order: 1000

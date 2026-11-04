@@ -1,0 +1,38 @@
+$kind: http-request
+url: "{{baseUrl}}/soap/library"
+method: POST
+headers:
+  Content-Type: text/xml; charset=utf-8
+  SOAPAction: '"http://example.com/library/CreateAuthor"'
+body:
+  type: xml
+  content: >-
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:lib="http://example.com/library">
+      <soap:Body>
+        <lib:CreateAuthorRequest>
+          <lib:name>   </lib:name>
+          <lib:surname>Example</lib:surname>
+        </lib:CreateAuthorRequest>
+      </soap:Body>
+    </soap:Envelope>
+scripts:
+  - type: afterResponse
+    code: >-
+      pm.test("HTTP 500", () => pm.response.to.have.status(500));
+
+      const xml = xml2Json(pm.response.text());
+
+      function find(node, name) {
+        if (!node || typeof node !== "object") return undefined;
+        for (const key of Object.keys(node)) {
+          if (key.split(":").pop() === name) return node[key];
+          const found = find(node[key], name);
+          if (found !== undefined) return found;
+        }
+      }
+
+      pm.test("ValidationFault", () => pm.expect(find(xml,
+      "ValidationFault")).to.not.equal(undefined));
+    language: text/javascript
+order: 18000
