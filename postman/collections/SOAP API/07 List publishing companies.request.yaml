@@ -10,9 +10,7 @@ body:
     <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
     xmlns:lib="http://example.com/library">
       <soap:Body>
-        <lib:ListPublishingCompaniesRequest>
-
-        </lib:ListPublishingCompaniesRequest>
+        <lib:ListPublishingCompaniesRequest/>
       </soap:Body>
     </soap:Envelope>
 scripts:

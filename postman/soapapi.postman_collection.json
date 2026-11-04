@@ -157,7 +157,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:ListAuthorsRequest>\n\n    </lib:ListAuthorsRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:ListAuthorsRequest/>\n  </soap:Body>\n</soap:Envelope>",
           "options": {
             "raw": {
               "language": "xml"
@@ -349,7 +349,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:ListPublishingCompaniesRequest>\n\n    </lib:ListPublishingCompaniesRequest>\n  </soap:Body>\n</soap:Envelope>",
+          "raw": "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:lib=\"http://example.com/library\">\n  <soap:Body>\n    <lib:ListPublishingCompaniesRequest/>\n  </soap:Body>\n</soap:Envelope>",
           "options": {
             "raw": {
               "language": "xml"
