@@ -25,7 +25,7 @@ init.sql kører kun første gang. Hvis den bliver ændret skal databasen nulstil
 | GraphQL | `graphql/` | 8080 | Quarkus                           |
 | REST    | `rest/`    | 8081 |                                   |
 | SOAP    | `soap/`    | 8082 | Spring Boot + Spring Web Services |
-| gRPC    | `grpc/`    | 9090 |                                   |
+| gRPC    | `grpc/`    | 9393 |                                   |
 
 ### GraphQL
 
