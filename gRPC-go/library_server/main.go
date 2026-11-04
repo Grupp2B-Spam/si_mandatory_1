@@ -6,8 +6,8 @@ import (
 	"log"
 	"net"
 
-	"spam/grpc/database"
-	"spam/grpc/pb"
+	"spam/grpc/gRPC-go/database"
+	"spam/grpc/gRPC-go/pb"
 
 	"google.golang.org/grpc"
 )
@@ -25,7 +25,7 @@ func main() {
 	defer listen.Close()
 	fmt.Printf("Server running on port: %s", addr)
 
-	db, err := database.Open("database/library.db")
+	db, err := database.Open("postgres://library:library@localhost:5432/library?sslmode=disable")
 
 	if err != nil {
 		log.Fatal(err)

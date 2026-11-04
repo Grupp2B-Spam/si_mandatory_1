@@ -4,16 +4,15 @@ import (
 	"context"
 	"database/sql"
 
-	_ "modernc.org/sqlite"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 type DB struct {
 	conn *sql.DB
 }
 
-func Open(path string) (*DB, error) {
-	conn, err := sql.Open("sqlite", "file:"+path+"?mode=rw")
-
+func Open(dsn string) (*DB, error) {
+	conn, err := sql.Open("pgx", dsn)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +35,7 @@ func (db *DB) GetBookById(ctx context.Context, id int32) (Book, error) {
             nPublishingYear,
             nPublishingCompanyID
         FROM tbook
-        WHERE nBookID = ?
+        WHERE nBookID = $1
     `, id).Scan(
 		&book.ID,
 		&book.Title,
@@ -67,27 +66,28 @@ func (db *DB) CreateBook(
 	publishingCompanyId int32,
 	publishingYear int32,
 ) (int64, error) {
-	result, err := db.conn.ExecContext(ctx, `
+	var id int64
+
+	err := db.conn.QueryRowContext(ctx, `
         INSERT INTO tbook (
             cTitle,
             nAuthorID,
             nPublishingYear,
             nPublishingCompanyID
         )
-        VALUES (?, ?, ?, ?)
+        VALUES ($1, $2, $3, $4)
+        RETURNING nBookID
     `,
 		title,
 		authorId,
 		publishingYear,
 		publishingCompanyId,
-	)
+	).Scan(&id)
 
-	if err != nil {
-		return 0, err
-	}
-
-	return result.LastInsertId()
+	return id, err
 }
+
+// Book, Author, PublishingCompany structs unchanged
 
 type Book struct {
 	ID                  int32
