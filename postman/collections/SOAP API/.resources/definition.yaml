@@ -1,0 +1,10 @@
+$kind: collection
+description: Run in order using Collection Runner. Creates its own author,
+  company and book, tests all 14 operations and the three faults, then deletes
+  its example data. If interrupted, use steps 24-26 to clean up (book first).
+  Faults normally use HTTP 500 in SOAP 1.1.
+variables:
+  baseUrl: http://localhost:8082
+  authorId: ""
+  publishingCompanyId: ""
+  bookId: ""
