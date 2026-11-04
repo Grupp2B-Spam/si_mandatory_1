@@ -57,11 +57,11 @@ func (server *LibraryServer) GetBookById(
 	request *pb.GetBookByIdRequest,
 ) (*pb.Book, error) {
 
-	log.Printf("Received GetBookById request: %d", request)
+	log.Printf("Received GetBookById request: %d", request.GetBookId())
 
 	book, err := server.db.GetBookById(ctx, request.GetBookId())
 
-	log.Printf("Book received from database: %o", book)
+	log.Printf("Book received from database: %+v", book)
 
 	if err != nil {
 		return nil, err
