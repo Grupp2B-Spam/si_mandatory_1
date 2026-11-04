@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "spam/grpc/pb";
+
+message GetBookByIdRequest {
+    int32 book_id = 1;
+}
+
+message Book {
+    int32 book_id = 1;
+    string title = 2;
+    int32 author_id = 3;
+    int32 publishing_year = 4;
+    int32 publishing_company_id = 5;
+}
+
+message CreateBookRequest {
+    string title = 1;
+    int32 author_id = 2;
+    int32 publishing_company_id = 3;
+    int32 publishing_year = 4;
+}
+
+message CreateBookResponse {
+    Book book = 1;
+}
+
+message WatchBooksRequest {
+}
+
+service Library {
+    rpc CreateBook(CreateBookRequest) returns (CreateBookResponse) {}
+    rpc GetBookById(GetBookByIdRequest) returns (Book) {}
+    rpc WatchBooks(WatchBooksRequest) returns (stream Book) {}
+} 

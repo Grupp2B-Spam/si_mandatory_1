@@ -5,7 +5,8 @@
 .vscode/
 
 # Original sqlite db (we use db/init.sql) and the assignment pdf
-library.db
+# library.db
+# Commented out library.db since I set up the go gRPC to use the file
 *.pdf
 
 # Personal notes
